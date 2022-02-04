@@ -1,0 +1,16 @@
+{
+  "name": "bookmine-server-v2",
+  "version": "1.0.0",
+  "description": "Book selling full stack MERN project",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "albiummid",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.17.2",
+    "mongoose": "^6.2.0"
+  }
+}
