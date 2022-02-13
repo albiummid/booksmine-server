@@ -11,5 +11,4 @@ router.get('/all', bookController.getAllBooks)
 router.get('/:bookId', bookController.findBook)
 router.patch('/:bookId', singleUpload, bookController.updateBook)
 router.delete('/:bookId', bookController.deleteBook)
-
 module.exports = router

@@ -5,15 +5,24 @@ const cloudinary = require('cloudinary')
 exports.addBook = async (req, res, next) => {
   const filePath = req?.file?.path
 
-  if (req.body?.imgUrl) {
+  if ( req.body!==null )
+  {
+    if (req.body?.imgUrl) {
     const book = await Book.create({
       ...req.body,
     })
-    res.json({
-      success: true,
-      msg: 'Successfully added a book !',
-      book,
-    })
+    if ( book )
+    {
+      res.json({
+        success: true,
+        msg: 'Successfully added a book !',
+        book,
+      })
+    }
+    else
+    {
+      res.json({"Failed"})
+    }
   } else {
     try {
       const { secure_url } = await cloudinary.v2.uploader.upload(filePath, {
@@ -34,7 +43,12 @@ exports.addBook = async (req, res, next) => {
     } catch (err) {
       console.log(err)
     }
+    }
+    
   }
+  else {
+      res.json({msg:"Data missing"})
+    }
 }
 
 exports.getAllBooks = async (req, res, next) => {
