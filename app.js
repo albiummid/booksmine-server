@@ -5,7 +5,6 @@ const semester = require('./routes/semester')
 const course = require('./routes/course')
 const order = require('./routes/order')
 const cors = require('cors')
-const allowCrossDomain = require('./utils/cors')
 
 const app = express()
 
