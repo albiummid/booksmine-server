@@ -54,7 +54,7 @@ exports.filterStatus = async (req, res, next) => {
 }
 
 exports.buyingList = (req, res, next) => {
-  Order.find({ status: 'Processing' })
+  Order.find({ status: 'processing' })
     .then((result) => {
       if (!result.length) {
         const err = new Error('Not Found')
