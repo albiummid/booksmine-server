@@ -19,7 +19,10 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    role: Number,
+    role: {
+      type: String,
+      required: true,
+    },
     userSettings: {
       base: {
         type: String,
