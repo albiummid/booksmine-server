@@ -49,47 +49,45 @@ exports.getAllUser = async (req, res, next) => {
 }
 
 exports.getUserBy = async (req, res, next) => {
-  const { email, _id } = req.query
+  const query = req.query
 
-  if (!(email || _id)) {
+  if (!(query.email || query._id)) {
     res.json({
       msg: 'some data missing',
       success: false,
     })
   } else {
-    console.log(email, _id)
-    if (email?.length) {
-      console.log('got Email')
-      const user = await User.findOne({ email: email })
-      if (!user) {
-        res.json({
-          success: false,
-          msg: 'Error',
-        })
-      } else {
-        res.json({
-          success: true,
-          msg: 'user found!',
-          user,
-        })
-      }
+    const user = await User.findOne({ query })
+    if (!user) {
+      res.json({
+        success: false,
+        msg: 'Error',
+      })
     } else {
-      console.log('_id Found')
-      const user = await User.findById(_id)
-      console.log(user)
-      if (user) {
-        res.json({
-          success: true,
-          msg: 'User Found !',
-          user,
-        })
-      } else {
-        res.json({
-          success: false,
-          msg: 'user not found!',
-        })
-      }
+      res.json({
+        success: true,
+        msg: 'user found!',
+        user,
+      })
     }
+  }
+}
+
+exports.updateUser = async (req, res, next) => {
+  const newData = req.body
+  const { _id } = req.query
+  try {
+    let userDoc = await User.findById(_id)
+    Object.assign(userDoc, newData)
+    const users = await User.find()
+    await userDoc.save()
+    res.json({
+      success: true,
+      msg: 'Successfully Updated !',
+      users,
+    })
+  } catch (err) {
+    res.json({ success: false, msg: 'Something Went wrong', err })
   }
 }
 
