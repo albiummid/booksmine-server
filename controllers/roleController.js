@@ -36,6 +36,22 @@ exports.addRole = async (req, res, next) => {
   }
 }
 
+exports.getAllRole = async (req, res, next) => {
+  const roles = await Role.find()
+  if (!roles) {
+    res.status(404).json({
+      success: false,
+      msg: 'Not found!',
+    })
+  } else {
+    res.json({
+      success: true,
+      msg: `Got ${roles.length} roles`,
+      roles,
+    })
+  }
+}
+
 exports.getRoleByCode = async (req, res, next) => {
   const { roleCode } = req.query
   if (!roleCode) {

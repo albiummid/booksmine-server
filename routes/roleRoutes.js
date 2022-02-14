@@ -7,5 +7,6 @@ router.post('/add', roleController.addRole)
 
 // role/getBy?roleCode=code
 router.get('/getBy', roleController.getRoleByCode)
+router.get('/all', roleController.getAllRole)
 
 module.exports = router

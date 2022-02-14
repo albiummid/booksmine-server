@@ -32,6 +32,22 @@ exports.addUser = async (req, res, next) => {
   }
 }
 
+exports.getAllUser = async (req, res, next) => {
+  const users = await User.find()
+  if (!users) {
+    res.status(404).json({
+      success: false,
+      msg: 'Not found!',
+    })
+  } else {
+    res.json({
+      success: true,
+      msg: `Got ${users.length} users`,
+      users,
+    })
+  }
+}
+
 exports.getUserBy = async (req, res, next) => {
   const { email, _id } = req.query
 
@@ -75,4 +91,30 @@ exports.getUserBy = async (req, res, next) => {
       }
     }
   }
+}
+
+exports.updateUserSettings = async (req, res, next) => {
+  const newData = req.body
+  const query = req.query
+  const userDoc = await User.findOne({ query })
+  const prevData = await userDoc.userSettings
+  userDoc.userSettings = {
+    ...prevData,
+    ...newData,
+  }
+  userDoc.save(async (err, user) => {
+    if (!err) {
+      res.json({
+        success: true,
+        user,
+        msg: 'UserSettings updated',
+        userSettings: user.userSettings,
+      })
+    } else {
+      res.json({
+        success: false,
+        msg: err.message,
+      })
+    }
+  })
 }
