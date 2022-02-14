@@ -1,9 +1,11 @@
 const express = require('express')
-const books = require('./routes/book')
-const department = require('./routes/department')
-const semester = require('./routes/semester')
-const course = require('./routes/course')
-const order = require('./routes/order')
+const books = require('./routes/bookRoutes')
+const department = require('./routes/departmentRoutes')
+const semester = require('./routes/semesterRoutes')
+const course = require('./routes/courseRoutes')
+const order = require('./routes/orderRoutes')
+const user = require('./routes/userRoutes')
+const role = require('./routes/roleRoutes')
 const cors = require('cors')
 
 const app = express()
@@ -24,11 +26,9 @@ app.use(
 )
 app.use(allowCrossDomain)
 
-// Home Page of BOOKIMINE server
-
 app.get('/', (req, res) => {
   res.send(
-    `Hola ! You are on official Booksmine Node.js Server PORT-${process.env.PORT} in ${process.env.NODE_ENV} !`
+    `Hola ! You are on official Booksmine Node.js Server PORT-${process.env.PORT}. This server is  in ${process.env.NODE_ENV} mode !`
   )
 })
 
@@ -38,5 +38,7 @@ app.use('/api/v1/department', department)
 app.use('/api/v1/semester', semester)
 app.use('/api/v1/course', course)
 app.use('/api/v1/order', order)
+app.use('/api/v1/user', user)
+app.use('/api/v1/role', role)
 
 module.exports = app

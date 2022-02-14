@@ -1,4 +1,14 @@
 {
-  "editor.fontSize": 14,
-  "editor.fontFamily": "Cascadia Code"
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true,
+    "source.fixAll.tslint": true,
+    "source.organizeImports": true
+  },
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "javascript.validate.enable": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }
