@@ -57,7 +57,7 @@ exports.getUserBy = async (req, res, next) => {
       success: false,
     })
   } else {
-    const user = await User.findOne({ query })
+    const user = await User.findOne({ ...query })
     if (!user) {
       res.json({
         success: false,
@@ -94,7 +94,7 @@ exports.updateUser = async (req, res, next) => {
 exports.updateUserSettings = async (req, res, next) => {
   const newData = req.body
   const query = req.query
-  const userDoc = await User.findOne({ query })
+  const userDoc = await User.findOne({ ...query })
   const prevData = await userDoc.userSettings
   userDoc.userSettings = {
     ...prevData,
