@@ -79,8 +79,8 @@ exports.updateUser = async (req, res, next) => {
   try {
     let userDoc = await User.findById(_id)
     Object.assign(userDoc, newData)
-    const users = await User.find()
     await userDoc.save()
+    const users = await User.find()
     res.json({
       success: true,
       msg: 'Successfully Updated !',
