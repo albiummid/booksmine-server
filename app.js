@@ -6,6 +6,8 @@ const course = require('./routes/courseRoutes')
 const order = require('./routes/orderRoutes')
 const user = require('./routes/userRoutes')
 const role = require('./routes/roleRoutes')
+
+const errorMiddleware = require('./middlewares/error')
 const cors = require('cors')
 
 const app = express()
@@ -40,5 +42,8 @@ app.use('/api/v1/course', course)
 app.use('/api/v1/order', order)
 app.use('/api/v1/user', user)
 app.use('/api/v1/role', role)
+
+//MiddleWares to handleErorrs
+app.use(errorMiddleware)
 
 module.exports = app

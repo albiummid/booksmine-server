@@ -1,35 +1,22 @@
 const { User } = require('../models/user')
+const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
+
 exports.addUser = async (req, res, next) => {
-  const { _id, accessToken, userName, email, photoURL, userSettings } = req.body
-  if (!accessToken || !userName || !email || !photoURL || !userSettings) {
-    res.status(400).json({
-      success: false,
-      message: 'Some fields are missing',
-      isDataAvailable: {
-        accessToken: accessToken?.length > 0,
-        userName: userName?.length > 0,
-        email: email?.length > 0,
-        photoURL: photoURL?.length > 0,
-        userSettings: userSettings != null || userSettings != undefined,
-      },
-    })
-  } else {
-    const userDoc = await new User({ ...req.body })
-    await userDoc.save(async (err, user) => {
-      if (err) {
-        res.json({
-          success: false,
-          msg: 'Got an error creating user!',
-          err,
-        })
-      } else {
-        res.json({
-          msg: 'userCreatedSuccessfully',
-          user,
-        })
-      }
-    })
-  }
+  const userDoc = await new User({ ...req.body })
+  await userDoc.save(async (err, user) => {
+    if (err) {
+      res.json({
+        success: false,
+        msg: 'Got an error creating user!',
+        err,
+      })
+    } else {
+      res.json({
+        msg: 'userCreatedSuccessfully',
+        user,
+      })
+    }
+  })
 }
 
 exports.getAllUser = async (req, res, next) => {
@@ -50,27 +37,22 @@ exports.getAllUser = async (req, res, next) => {
 
 exports.getUserBy = async (req, res, next) => {
   const query = req.query
-
-  if (!(query.email || query._id)) {
-    res.json({
-      msg: 'some data missing',
-      success: false,
-    })
-  } else {
-    const user = await User.findOne({ ...query })
-    if (!user) {
-      res.json({
-        success: false,
-        msg: 'Error',
-      })
-    } else {
-      res.json({
-        success: true,
-        msg: 'user found!',
-        user,
-      })
-    }
-  }
+  const user = await User.findOne({ ...query })
+  res.json({
+    success: true,
+    msg: 'user found!',
+    user,
+  })
+}
+exports.getUserRoleBy = async (req, res, next) => {
+  console.log('called')
+  const query = req.query
+  const user = await User.findOne({ ...query })
+  res.json({
+    success: true,
+    msg: 'user found!',
+    role: user?.role,
+  })
 }
 
 exports.updateUser = async (req, res, next) => {
