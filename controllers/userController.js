@@ -38,21 +38,35 @@ exports.getAllUser = async (req, res, next) => {
 exports.getUserBy = async (req, res, next) => {
   const query = req.query
   const user = await User.findOne({ ...query })
-  res.json({
-    success: true,
-    msg: 'user found!',
-    user,
-  })
+  if (!user) {
+    res.status(404).json({
+      success: false,
+      msg: 'user not found!',
+    })
+  } else {
+    res.json({
+      success: true,
+      msg: 'user found!',
+      user,
+    })
+  }
 }
 exports.getUserRoleBy = async (req, res, next) => {
   console.log('called')
   const query = req.query
   const user = await User.findOne({ ...query })
-  res.json({
-    success: true,
-    msg: 'user found!',
-    role: user?.role,
-  })
+  if (user) {
+    res.json({
+      success: true,
+      msg: 'user found!',
+      role: user?.role,
+    })
+  } else {
+    res.status(404).json({
+      success: false,
+      msg: 'user not found!',
+    })
+  }
 }
 
 exports.updateUser = async (req, res, next) => {
