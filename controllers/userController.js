@@ -115,18 +115,19 @@ exports.updateUserSettings = async (req, res, next) => {
 }
 
 exports.checkAndCreateUser = async (req, res, next) => {
-  const existUser = await User.find({ email: req.body.email })
-  console.log(existUser)
-  if (!existUser.length) {
+  const existUser = await User.findOne({ email: req.body.email })
+  if (!existUser) {
     try {
       const newUser = new User({
         ...req.body,
         role: 'user',
         userSettings: {
           base: 'https://booksmine-server.herokuapp.com/api/v1',
+          isServer: true,
         },
       })
       newUser.save()
+      console.log(req.body)
       res.json({
         success: true,
         msg: 'new user created successfully',
@@ -143,7 +144,7 @@ exports.checkAndCreateUser = async (req, res, next) => {
     res.json({
       success: true,
       msg: 'user exists !',
-      user: existUser[0],
+      user: existUser,
     })
   }
 }
