@@ -5,9 +5,8 @@ const userSchema = new Schema(
   {
     accessToken: {
       type: String,
-      required: true,
     },
-    userName: {
+    name: {
       type: String,
       required: true,
     },
@@ -15,7 +14,7 @@ const userSchema = new Schema(
       type: String,
       required: true,
     },
-    photoURL: {
+    image: {
       type: String,
       required: true,
     },
