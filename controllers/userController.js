@@ -119,7 +119,13 @@ exports.checkAndCreateUser = async (req, res, next) => {
   console.log(existUser)
   if (!existUser.length) {
     try {
-      const newUser = new User({ ...req.body })
+      const newUser = new User({
+        ...req.body,
+        role: 'user',
+        userSettings: {
+          base: 'https://booksmine-server.herokuapp.com/api/v1',
+        },
+      })
       newUser.save()
       res.json({
         success: true,
@@ -137,6 +143,7 @@ exports.checkAndCreateUser = async (req, res, next) => {
     res.json({
       success: true,
       msg: 'user exists !',
+      user: existUser[0],
     })
   }
 }
