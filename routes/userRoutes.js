@@ -9,5 +9,6 @@ router.get('/getUserRoleBy', userController.getUserRoleBy)
 router.get('/all', userController.getAllUser)
 router.patch('/update', userController.updateUser)
 router.patch('/updateUserSettings', userController.updateUserSettings)
+router.post('/checkAndCreateUser', userController.checkAndCreateUser)
 
 module.exports = router

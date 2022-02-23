@@ -1,5 +1,6 @@
 const { User } = require('../models/user')
 const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
+const req = require('express/lib/request')
 
 exports.addUser = async (req, res, next) => {
   const userDoc = await new User({ ...req.body })
@@ -111,4 +112,31 @@ exports.updateUserSettings = async (req, res, next) => {
       })
     }
   })
+}
+
+exports.checkAndCreateUser = async (req, res, next) => {
+  const existUser = await User.find({ email: req.body.email })
+  console.log(existUser)
+  if (!existUser.length) {
+    try {
+      const newUser = new User({ ...req.body })
+      newUser.save()
+      res.json({
+        success: true,
+        msg: 'new user created successfully',
+        user: newUser,
+      })
+    } catch (err) {
+      res.status(400).json({
+        success: false,
+        msg: 'New user not created',
+        error: err,
+      })
+    }
+  } else {
+    res.json({
+      success: true,
+      msg: 'user exists !',
+    })
+  }
 }
