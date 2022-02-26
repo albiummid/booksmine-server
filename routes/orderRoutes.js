@@ -7,7 +7,7 @@ router.post('/add', orderController.add)
 router.get('/all', orderController.all)
 router.get('/status/:status', orderController.filterStatus)
 router.get('/buyingList', orderController.buyingList)
-router.get('/:email', orderController.userOrder)
+router.get('/getOrdersBy', orderController.userOrder)
 router.delete('/:id', orderController.delete)
 router.put('/:id', orderController.update)
 

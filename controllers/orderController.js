@@ -113,26 +113,23 @@ exports.buyingList = (req, res, next) => {
     })
 }
 
-exports.userOrder = (req, res, next) => {
-  const email = req.params.email
-
-  Order.find()
-    .then((result) => {
-      if (!result.length) {
-        const err = new Error('Not Found')
-        res.send({ message: 'not FOund' })
-      } else {
-        const userData = result.filter((d) => d.user.email === email)
-        res.json({
-          message: 'Order List Found',
-          order: userData,
-        })
-      }
+exports.userOrder = async (req, res, next) => {
+  const { email, _id } = req.query
+  console.log(email, _id)
+  const userOrders = email?.length
+    ? await Order.find({ email })
+    : await Order.find({ _id })
+  if (userOrders?.length) {
+    res.json({
+      success: true,
+      orders: userOrders,
     })
-    .catch((err) => {
-      res.json(err)
-      next(err)
+  } else {
+    res.status(404).json({
+      success: false,
+      msg: 'no data found ',
     })
+  }
 }
 
 exports.delete = (req, res, next) => {
