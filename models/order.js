@@ -2,8 +2,6 @@ const Mongoose = require('mongoose')
 
 const Schema = Mongoose.Schema
 
-const orderListSchema = new Schema({})
-
 const orderSchema = new Schema(
   {
     trxId: {
@@ -35,7 +33,7 @@ const orderSchema = new Schema(
         type: String,
       },
     },
-    orders: [
+    books: [
       {
         _id: {
           type: String,
