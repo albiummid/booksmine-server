@@ -132,19 +132,30 @@ exports.userOrder = async (req, res, next) => {
   }
 }
 
-exports.delete = (req, res, next) => {
-  const id = req.params.id.toString()
-  Order.findByIdAndRemove(id)
-    .then((result) => {
+exports.delete = async (req, res, next) => {
+  const id = req.params.id
+  const order = await Order.findById(id)
+  if (order) {
+    try {
+      await order.remove()
+      const orderList = await Order.find()
       res.json({
-        message: 'sucessfully Deleted ',
-        result,
+        success: true,
+        msg: 'Successfully Deleted!',
+        orders: orderList,
       })
+    } catch (err) {
+      res.json({
+        success: false,
+        error: err,
+      })
+    }
+  } else {
+    res.json({
+      success: false,
+      msg: 'order not found !',
     })
-    .catch((err) => {
-      console.log(err)
-      next(err)
-    })
+  }
 }
 exports.update = (req, res, next) => {
   const id = req.params.id
