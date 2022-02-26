@@ -2,20 +2,21 @@ const Order = require('../models/order')
 const Book = require('../models/book')
 exports.add = async (req, res, next) => {
   const data = req.body
-  await Order.insertMany(data, (err, doc) => {
-    if (err) {
-      res.json({
-        success: false,
-        msg: "Can't added order data !",
-      })
-    } else {
-      res.send({
-        success: true,
-        msg: 'Order Successfully Added',
-        doc,
-      })
-    }
-  })
+
+  const newOrder = new Order({ ...data })
+  console.log(newOrder)
+  try {
+    newOrder.save()
+    res.json({
+      success: true,
+      order: newOrder,
+    })
+  } catch (err) {
+    res.status(401).json({
+      success: false,
+      msg: 'failed to create an order.',
+    })
+  }
 }
 
 exports.all = async (req, res, next) => {

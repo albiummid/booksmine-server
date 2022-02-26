@@ -2,37 +2,20 @@ const Mongoose = require('mongoose')
 
 const Schema = Mongoose.Schema
 
+const orderListSchema = new Schema({})
+
 const orderSchema = new Schema(
   {
-    title: {
-      type: String,
-      required: true,
-    },
-    bookId: {
-      type: String,
-      required: true,
-    },
     trxId: {
       type: String,
     },
     status: {
       type: String,
       required: true,
+      enum: ['processing', 'pending', 'done'],
     },
-    author: {
-      type: String,
-      required: true,
-    },
-    price: {
-      type: String,
-      required: true,
-    },
-    imgUrl: {
-      type: String,
-      required: true,
-    },
-    quantity: {
-      type: String,
+    totalBill: {
+      type: Number,
       required: true,
     },
     user: {
@@ -48,7 +31,34 @@ const orderSchema = new Schema(
         type: String,
         required: true,
       },
+      promoCode: {
+        type: String,
+      },
     },
+    orders: [
+      {
+        _id: {
+          type: String,
+          required: true,
+        },
+        title: {
+          type: String,
+          required: true,
+        },
+        author: {
+          required: true,
+          type: String,
+        },
+        price: {
+          required: true,
+          type: Number,
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
   {
     timestamps: true,
