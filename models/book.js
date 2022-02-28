@@ -17,6 +17,10 @@ const bookSchema = new Schema(
       type: String,
       required: [true, 'Please give image URL  '],
     },
+    summary: {
+      type: String,
+      required: true,
+    },
     ratings: {
       type: Number,
       required: false,

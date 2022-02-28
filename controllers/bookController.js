@@ -6,21 +6,9 @@ exports.addBook = async (req, res, next) => {
   const filePath = req?.file?.path
 
   if (req.body !== null) {
-    if (req.body?.imgUrl) {
-      const book = await Book.create({
-        ...req.body,
-      })
-      if (book) {
-        res.json({
-          success: true,
-          msg: 'Successfully added a book !',
-          book,
-        })
-      } else {
-        res.json({ msg: 'Failed' })
-      }
-    } else {
+    if (req?.file) {
       try {
+        console.log('creating With fiel')
         const { secure_url } = await cloudinary.v2.uploader.upload(filePath, {
           folder: 'bookImages',
           public_id: `${Date.now()}`,
@@ -28,6 +16,7 @@ exports.addBook = async (req, res, next) => {
           width: 300,
           crop: 'scale',
         })
+        console.log(secure_url)
 
         const book = await Book.create({ ...req.body, imgUrl: secure_url })
 
@@ -38,6 +27,20 @@ exports.addBook = async (req, res, next) => {
         })
       } catch (err) {
         console.log(err)
+      }
+    } else {
+      const book = await Book.create({
+        ...req.body,
+      })
+      if (book) {
+        console.log('created with link')
+        res.json({
+          success: true,
+          msg: 'Successfully added a book !',
+          book,
+        })
+      } else {
+        res.json({ msg: 'Failed' })
       }
     }
   } else {
@@ -97,9 +100,10 @@ exports.deleteBook = async (req, res, next) => {
 }
 
 exports.updateBook = async (req, res, next) => {
+  const data = req.body
   const bookId = req.params.bookId
   const exists = await Book.findById(bookId)
-  const data = req.body
+  console.log(exists)
   if (!exists) {
     res.status(404).json({
       success: false,

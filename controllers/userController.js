@@ -92,26 +92,32 @@ exports.updateUserSettings = async (req, res, next) => {
   const newData = req.body
   const query = req.query
   const userDoc = await User.findOne({ ...query })
-  const prevData = await userDoc.userSettings
-  userDoc.userSettings = {
-    ...prevData,
-    ...newData,
-  }
-  userDoc.save(async (err, user) => {
-    if (!err) {
+  if (userDoc) {
+    const prevData = await userDoc.userSettings
+    userDoc.userSettings = {
+      ...prevData,
+      ...newData,
+    }
+    try {
+      await userDoc.save()
       res.json({
         success: true,
-        user,
-        msg: 'UserSettings updated',
-        userSettings: user.userSettings,
+        userSettings: userDoc.userSettings,
       })
-    } else {
+    } catch (err) {
       res.json({
         success: false,
-        msg: err.message,
+        error: err,
       })
     }
-  })
+  } else {
+    res
+      .json({
+        success: false,
+        msg: 'No data found',
+      })
+      .status(404)
+  }
 }
 
 exports.checkAndCreateUser = async (req, res, next) => {

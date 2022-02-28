@@ -54,63 +54,41 @@ exports.filterStatus = async (req, res, next) => {
   }
 }
 
-exports.buyingList = (req, res, next) => {
-  Order.find({ status: 'processing' })
-    .then((result) => {
-      if (!result.length) {
-        const err = new Error('Not Found')
-        next(err)
-      } else {
-        const data = result
-        let booksId = []
-        booksId = data.map((d) => {
-          return d.bookId
-        })
-        booksId = [...new Set(booksId)]
-        const booksOrders = booksId.map((bookId) => {
-          let quantity = 0
-          const similarOrders = data?.filter((d) => d.bookId === bookId)
-          similarOrders.map((d) => {
-            quantity = quantity + Number(d.quantity)
-          })
-          return {
-            id: bookId,
-            quantity,
-          }
-        })
-        Book.find().then((booksData) => {
-          const buyingList = booksOrders.map((d) => {
-            const bookDetails = booksData.find(
-              (bookData) => bookData._id.toString() === d.id
-            )
-            const { title, author, price, discount } = bookDetails
-            const discountedPrice = price - (price * discount) / 100
-            return {
-              ...d,
-              title,
-              author,
-              price: discountedPrice,
-              totalPrice: discountedPrice * d.quantity,
-            }
-          })
+exports.buyingList = async (req, res, next) => {
+  const processingList = await Order.find({ status: 'processing' })
+  if (!processingList.length) {
+    res.status(404).json({
+      success: false,
+      msg: 'Processing Order empty !',
+    })
+    return
+  }
+  let buyingBooks = []
+  let totalCost = 0
 
-          let TotalCost = 0
-          buyingList.map((d) => (TotalCost = TotalCost + d.totalPrice))
-
-          res.json({
-            message: 'Order List Found',
-            totalCost: TotalCost,
-            buyingList: buyingList,
-          })
-        })
+  // Generating BookList for buy...
+  processingList.forEach((order) => {
+    order.books.forEach((book) => {
+      const idxExistBook = buyingBooks.findIndex(
+        (item) => item._id === book._id
+      )
+      if (idxExistBook >= 0) {
+        buyingBooks[idxExistBook].quantity += book.quantity
+        return
       }
+      buyingBooks.push(book)
     })
-    .catch((err) => {
-      res.json({
-        success: false,
-        msg: 'something went wrong !',
-      })
-    })
+  })
+
+  //calculating total cost
+  buyingBooks.forEach((item) => (totalCost += item.price * item.quantity))
+
+  res.json({
+    success: true,
+    count: buyingBooks.length,
+    buyingList: buyingBooks,
+    totalCost,
+  })
 }
 
 exports.userOrder = async (req, res, next) => {
