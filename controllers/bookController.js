@@ -1,4 +1,4 @@
-const Book = require('../models/book')
+const { Book } = require('../models/book')
 const cloudinary = require('cloudinary')
 
 // Add book => api/v1/book
@@ -8,7 +8,6 @@ exports.addBook = async (req, res, next) => {
   if (req.body !== null) {
     if (req?.file) {
       try {
-        console.log('creating With fiel')
         const { secure_url } = await cloudinary.v2.uploader.upload(filePath, {
           folder: 'bookImages',
           public_id: `${Date.now()}`,
@@ -16,7 +15,6 @@ exports.addBook = async (req, res, next) => {
           width: 300,
           crop: 'scale',
         })
-        console.log(secure_url)
 
         const book = await Book.create({ ...req.body, imgUrl: secure_url })
 
@@ -33,7 +31,6 @@ exports.addBook = async (req, res, next) => {
         ...req.body,
       })
       if (book) {
-        console.log('created with link')
         res.json({
           success: true,
           msg: 'Successfully added a book !',
@@ -103,7 +100,6 @@ exports.updateBook = async (req, res, next) => {
   const data = req.body
   const bookId = req.params.bookId
   const exists = await Book.findById(bookId)
-  console.log(exists)
   if (!exists) {
     res.status(404).json({
       success: false,

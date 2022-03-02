@@ -1,7 +1,10 @@
 const express = require('express')
 const books = require('./routes/bookRoutes')
 const department = require('./routes/departmentRoutes')
+const transaction = require('./routes/transactionRoutes')
+const category = require('./routes/categoryRoutes')
 const semester = require('./routes/semesterRoutes')
+const favorite = require('./routes/favoriteRoutes')
 const course = require('./routes/courseRoutes')
 const order = require('./routes/orderRoutes')
 const user = require('./routes/userRoutes')
@@ -35,11 +38,15 @@ app.get('/', (req, res) => {
 })
 
 // Use all routes
-app.use('/api/v1/book', books)
+
 app.use('/api/v1/department', department)
+app.use('/api/v1/transaction', transaction)
 app.use('/api/v1/semester', semester)
+app.use('/api/v1/category', category)
+app.use('/api/v1/favorite', favorite)
 app.use('/api/v1/course', course)
 app.use('/api/v1/order', order)
+app.use('/api/v1/book', books)
 app.use('/api/v1/user', user)
 app.use('/api/v1/role', role)
 

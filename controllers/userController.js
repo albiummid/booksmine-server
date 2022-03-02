@@ -53,7 +53,6 @@ exports.getUserBy = async (req, res, next) => {
   }
 }
 exports.getUserRoleBy = async (req, res, next) => {
-  console.log('called')
   const query = req.query
   const user = await User.findOne({ ...query })
   if (user) {
@@ -133,7 +132,6 @@ exports.checkAndCreateUser = async (req, res, next) => {
         },
       })
       newUser.save()
-      console.log(req.body)
       res.json({
         success: true,
         msg: 'new user created successfully',

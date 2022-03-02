@@ -71,16 +71,13 @@ const bookSchema = new Schema(
     ],
     department: {
       type: String,
-      required: [true, 'Please enter department   '],
     },
 
     semester: {
       type: String,
-      required: [true, 'Please enter semester'],
     },
     courseCode: {
       type: String,
-      required: [true, 'Please enter course code'],
     },
   },
   {
@@ -88,4 +85,6 @@ const bookSchema = new Schema(
   }
 )
 
-module.exports = mongoose.model('Book', bookSchema)
+const Book = mongoose.model('Book', bookSchema)
+
+module.exports = { Book, bookSchema }

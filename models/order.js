@@ -10,7 +10,7 @@ const orderSchema = new Schema(
     status: {
       type: String,
       required: true,
-      enum: ['processing', 'pending', 'done'],
+      enum: ['verifying', 'pending', 'processing', 'packing', 'delivered'],
     },
     totalBill: {
       type: Number,

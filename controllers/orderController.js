@@ -4,7 +4,6 @@ exports.add = async (req, res, next) => {
   const data = req.body
 
   const newOrder = new Order({ ...data })
-  console.log(newOrder)
   try {
     newOrder.save()
     res.json({
@@ -55,19 +54,21 @@ exports.filterStatus = async (req, res, next) => {
 }
 
 exports.buyingList = async (req, res, next) => {
-  const processingList = await Order.find({ status: 'processing' })
-  if (!processingList.length) {
+  const pendingList = await Order.find({ status: 'pending' })
+  if (!pendingList.length) {
     res.status(404).json({
       success: false,
-      msg: 'Processing Order empty !',
+      msg: 'Pending Order empty !',
     })
     return
   }
+  const buyingOrders = []
   let buyingBooks = []
   let totalCost = 0
 
   // Generating BookList for buy...
-  processingList.forEach((order) => {
+  pendingList.forEach((order) => {
+    buyingOrders.push(order._id)
     order.books.forEach((book) => {
       const idxExistBook = buyingBooks.findIndex(
         (item) => item._id === book._id
@@ -87,13 +88,13 @@ exports.buyingList = async (req, res, next) => {
     success: true,
     count: buyingBooks.length,
     buyingList: buyingBooks,
+    buyingOrders,
     totalCost,
   })
 }
 
 exports.userOrder = async (req, res, next) => {
   const { email, _id } = req.query
-  console.log(email, _id)
   const userOrders = email?.length
     ? await Order.find({ email })
     : await Order.find({ _id })
@@ -135,7 +136,8 @@ exports.delete = async (req, res, next) => {
     })
   }
 }
-exports.update = (req, res, next) => {
+
+exports.update = async (req, res, next) => {
   const id = req.params.id
   const status = req.body.status
   Order.findByIdAndUpdate(id, { status })
@@ -149,4 +151,22 @@ exports.update = (req, res, next) => {
       console.log(err)
       next(err)
     })
+}
+
+exports.updateMany = async (req, res, next) => {
+  try {
+    const { orders } = req.body
+    await Order.updateMany(
+      { _id: { $in: orders } },
+      { status: 'processing' },
+      { multi: true },
+      (err, doc) => {
+        if (err) {
+          return console.log(err)
+        }
+      }
+    )
+  } catch (err) {
+    console.log(err)
+  }
 }
