@@ -96,7 +96,7 @@ exports.buyingList = async (req, res, next) => {
 exports.userOrder = async (req, res, next) => {
   const { email, _id } = req.query
   const userOrders = email?.length
-    ? await Order.find({ email })
+    ? await Order.find({ user: { email: email } })
     : await Order.find({ _id })
   if (userOrders?.length) {
     res.json({
