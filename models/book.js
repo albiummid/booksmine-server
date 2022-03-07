@@ -13,6 +13,10 @@ const bookSchema = new Schema(
       type: String,
       required: [true, 'Please enter author name'],
     },
+    category: {
+      type: String,
+      required: true,
+    },
     imgUrl: {
       type: String,
       required: [true, 'Please give image URL  '],

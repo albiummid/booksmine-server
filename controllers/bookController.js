@@ -3,18 +3,19 @@ const cloudinary = require('cloudinary')
 
 // Add book => api/v1/book
 exports.addBook = async (req, res, next) => {
-  const filePath = req?.file?.path
-
   if (req.body !== null) {
     if (req?.file) {
       try {
-        const { secure_url } = await cloudinary.v2.uploader.upload(filePath, {
-          folder: 'bookImages',
-          public_id: `${Date.now()}`,
-          resource_type: 'auto',
-          width: 300,
-          crop: 'scale',
-        })
+        const { secure_url } = await cloudinary.v2.uploader.upload(
+          req.file.path,
+          {
+            folder: 'bookImages',
+            public_id: `${Date.now()}`,
+            resource_type: 'auto',
+            width: 300,
+            crop: 'scale',
+          }
+        )
 
         const book = await Book.create({ ...req.body, imgUrl: secure_url })
 
