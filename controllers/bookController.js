@@ -2,47 +2,83 @@ const { Book } = require('../models/book')
 const cloudinary = require('cloudinary')
 
 // Add book => api/v1/book
+// exports.addBook = async (req, res, next) => {
+//   console.log(req.file)
+//   if (req.body !== null) {
+//     if (req?.file) {
+//       try {
+//         const { secure_url } = await cloudinary.v2.uploader.upload(
+//           req.file.path,
+//           {
+//             folder: 'bookImages',
+//             public_id: `${Date.now()}`,
+//             resource_type: 'auto',
+//             width: 300,
+//             crop: 'scale',
+//           }
+//         )
+
+//         const book = await Book.create({ ...req.body, imgUrl: secure_url })
+
+//         res.status(200).json({
+//           success: true,
+//           msg: 'Successfully added a book !',
+//           book,
+//         })
+//       } catch (err) {
+//         console.log(err)
+//       }
+//     } else {
+//       const book = await Book.create({
+//         ...req.body,
+//       })
+//       if (book) {
+//         res.json({
+//           success: true,
+//           msg: 'Successfully added a book !',
+//           book,
+//         })
+//       } else {
+//         res.json({ msg: 'Failed' })
+//       }
+//     }
+//   } else {
+//     res.json({ msg: 'Data missing' })
+//   }
+// }
+
 exports.addBook = async (req, res, next) => {
-  if (req.body !== null) {
-    if (req?.file) {
-      try {
-        const { secure_url } = await cloudinary.v2.uploader.upload(
-          req.file.path,
-          {
-            folder: 'bookImages',
-            public_id: `${Date.now()}`,
-            resource_type: 'auto',
-            width: 300,
-            crop: 'scale',
-          }
-        )
+  const filePath = req?.file?.path
 
-        const book = await Book.create({ ...req.body, imgUrl: secure_url })
-
-        res.status(200).json({
-          success: true,
-          msg: 'Successfully added a book !',
-          book,
-        })
-      } catch (err) {
-        console.log(err)
-      }
-    } else {
-      const book = await Book.create({
-        ...req.body,
-      })
-      if (book) {
-        res.json({
-          success: true,
-          msg: 'Successfully added a book !',
-          book,
-        })
-      } else {
-        res.json({ msg: 'Failed' })
-      }
-    }
+  if (req.body?.imgUrl) {
+    const book = await Book.create({
+      ...req.body,
+    })
+    res.json({
+      success: true,
+      msg: 'Successfully added a book !',
+      book,
+    })
   } else {
-    res.json({ msg: 'Data missing' })
+    try {
+      const { secure_url } = await cloudinary.v2.uploader.upload(filePath, {
+        folder: 'bookImages',
+        public_id: `${Date.now()}`,
+        resource_type: 'auto',
+        width: 300,
+        crop: 'scale',
+      })
+
+      const book = await Book.create({ ...req.body, imgUrl: secure_url })
+
+      res.status(200).json({
+        success: true,
+        msg: 'Successfully added a book !',
+        book,
+      })
+    } catch (err) {
+      console.log(err)
+    }
   }
 }
 
