@@ -12,8 +12,6 @@ const role = require('./routes/roleRoutes')
 
 const errorMiddleware = require('./middlewares/error')
 const cors = require('cors')
-const fileUpload = require('express-fileupload')
-const multer = require('multer')
 
 const app = express()
 const allowCrossDomain = function (req, res, next) {
@@ -24,7 +22,7 @@ const allowCrossDomain = function (req, res, next) {
   next()
 }
 
-// app.use(express.json())
+app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(
   cors({
