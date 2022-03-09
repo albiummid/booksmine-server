@@ -48,6 +48,7 @@ const cloudinary = require('cloudinary')
 // }
 
 exports.addBook = async (req, res, next) => {
+  console.log(req.files)
   if (req.body?.imgUrl) {
     try {
       const book = await Book.create({
@@ -65,21 +66,24 @@ exports.addBook = async (req, res, next) => {
     try {
       const filePath = req?.file?.path
       console.log(filePath)
-      const { secure_url } = await cloudinary.v2.uploader.upload(filePath, {
-        folder: 'bookImages',
-        public_id: `${Date.now()}`,
-        resource_type: 'auto',
-        width: 300,
-        crop: 'scale',
+      res.json({
+        file: req?.file?.path,
       })
+      // const { secure_url } = await cloudinary.v2.uploader.upload(filePath, {
+      //   folder: 'bookImages',
+      //   public_id: `${Date.now()}`,
+      //   resource_type: 'auto',
+      //   width: 300,
+      //   crop: 'scale',
+      // })
 
-      const book = await Book.create({ ...req.body, imgUrl: secure_url })
+      // const book = await Book.create({ ...req.body, imgUrl: secure_url })
 
-      res.status(200).json({
-        success: true,
-        msg: 'Successfully added a book !',
-        book,
-      })
+      // res.status(200).json({
+      //   success: true,
+      //   msg: 'Successfully added a book !',
+      //   book,
+      // })
     } catch (err) {
       console.log(err)
     }
