@@ -1,4 +1,4 @@
-const { Book } = require('../models/book')
+const Book = require('../models/book')
 const cloudinary = require('cloudinary')
 
 // Add book => api/v1/book

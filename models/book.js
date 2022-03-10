@@ -89,6 +89,4 @@ const bookSchema = new Schema(
   }
 )
 
-const Book = mongoose.model('Book', bookSchema)
-
-module.exports = { Book, bookSchema }
+module.exports = mongoose.model('Book', bookSchema)

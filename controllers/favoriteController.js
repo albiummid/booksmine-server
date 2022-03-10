@@ -1,15 +1,25 @@
-const Favorite = require('../models/favorite')
+const User = require('../models/user')
 
 exports.add = async (req, res, next) => {
   const { email, bookId } = req.body
   try {
-    const favorite = await Favorite.create({ email, bookId: { _id: bookId } })
+    await User.updateOne(
+      { email: email },
+      {
+        $push: {
+          favorites: bookId,
+        },
+      }
+    )
+    const user = await User.find({ email })
+    console.log(user)
     res.json({
       success: true,
-      msg: 'Created !',
-      favorite,
+      msg: 'Added to favorite',
+      favorites: user.favorites,
     })
   } catch (err) {
+    console.log(err)
     res.json({
       success: false,
       msg: 'Got an error',
@@ -19,9 +29,10 @@ exports.add = async (req, res, next) => {
 }
 
 exports.getAll = async (req, res, next) => {
-  const favList = await Favorite.find({ email: req.params.email }).populate(
-    '_id'
-  )
+  const favList = await User.find({ email: req.params.email })
+    .populate('favorites')
+    .exec()
+  console.log(favList)
   if (!favList.length) {
     return res.status(404).json({
       msg: 'No favorite book found!',
@@ -34,15 +45,15 @@ exports.getAll = async (req, res, next) => {
 }
 
 exports.delete = async (req, res, next) => {
-  const favorite = await Favorite.findById(req.params.id)
-  if (!favorite) {
-    return res.status(404).json({
-      msg: 'not found to delete',
-    })
-  }
-
+  const { email, bookId } = req.body
+  console.log(email, bookId)
   try {
-    favorite.remove()
+    const user = await User.findOne({ email })
+    const newList = await user.favorites.filter(
+      (item) => item.toString() !== bookId
+    )
+    user.favorites = newList
+    await user.save()
     res.json({
       success: true,
       msg: 'removed',

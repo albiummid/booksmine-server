@@ -1,6 +1,4 @@
-const { User } = require('../models/user')
-const catchAsyncErrors = require('../middlewares/catchAsyncErrors')
-const req = require('express/lib/request')
+const User = require('../models/user')
 
 exports.addUser = async (req, res, next) => {
   const userDoc = await new User({ ...req.body })

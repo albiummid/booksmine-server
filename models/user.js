@@ -13,6 +13,7 @@ const userSchema = new Schema(
     email: {
       type: String,
       required: true,
+      trim: true,
     },
     image: {
       type: String,
@@ -32,8 +33,15 @@ const userSchema = new Schema(
         required: true,
       },
     },
+    favorites: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: 'Book',
+      },
+      ,
+    ],
   },
   { timestamps: true }
 )
 
-exports.User = mongoose.model('user', userSchema)
+module.exports = mongoose.model('user', userSchema)

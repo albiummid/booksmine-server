@@ -96,17 +96,17 @@ exports.buyingList = async (req, res, next) => {
 exports.userOrder = async (req, res, next) => {
   const { email, _id } = req.query
   const userOrders = email?.length
-    ? await Order.find({ user: { email: email } })
+    ? await Order.find({ email: email.trim() })
     : await Order.find({ _id })
   if (userOrders?.length) {
     res.json({
       success: true,
-      orders: userOrders,
+      orders: email.length ? emailFiltered : userOrders,
     })
   } else {
     res.status(404).json({
       success: false,
-      msg: 'no data found ',
+      msg: 'no data found',
     })
   }
 }
