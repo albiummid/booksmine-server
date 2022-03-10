@@ -101,7 +101,7 @@ exports.userOrder = async (req, res, next) => {
   if (userOrders?.length) {
     res.json({
       success: true,
-      orders: email.length ? emailFiltered : userOrders,
+      orders: userOrders,
     })
   } else {
     res.status(404).json({
