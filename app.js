@@ -21,17 +21,7 @@ const allowCrossDomain = function (req, res, next) {
 
   next()
 }
-// const whitelist = ['https://booksmine.vercel.app', 'http://localhost:3000']
-// const corsOptions = {
-//   origin: '*',
-//   origin: function (origin, callback) {
-//     if (whitelist.indexOf(origin) !== -1) {
-//       callback(null, true)
-//     } else {
-//       callback(new Error('Not allowed by CORS'))
-//     }
-//   },
-// }
+app.use(allowCrossDomain)
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cors())
@@ -46,12 +36,6 @@ app.use((req, res, next) => {
     return res.status(200).json({})
   }
 
-  next()
-})
-app.use(function (req, res, next) {
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', '*')
-  res.setHeader('Access-Control-Allow-Headers', '*')
   next()
 })
 
