@@ -21,33 +21,33 @@ const allowCrossDomain = function (req, res, next) {
 
   next()
 }
-const whitelist = ['https://booksmine.vercel.app', 'http://localhost:3000']
-const corsOptions = {
-  origin: '*',
-  origin: function (origin, callback) {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true)
-    } else {
-      callback(new Error('Not allowed by CORS'))
-    }
-  },
-}
+// const whitelist = ['https://booksmine.vercel.app', 'http://localhost:3000']
+// const corsOptions = {
+//   origin: '*',
+//   origin: function (origin, callback) {
+//     if (whitelist.indexOf(origin) !== -1) {
+//       callback(null, true)
+//     } else {
+//       callback(new Error('Not allowed by CORS'))
+//     }
+//   },
+// }
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
-app.use(cors(corsOptions))
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*')
-  res.header(
-    'Access-Control-Allow-Headers',
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
-  )
-  if (req.method == 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET')
-    return res.status(200).json({})
-  }
+app.use(cors())
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*')
+//   res.header(
+//     'Access-Control-Allow-Headers',
+//     'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+//   )
+//   if (req.method == 'OPTIONS') {
+//     res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET')
+//     return res.status(200).json({})
+//   }
 
-  next()
-})
+//   next()
+// })
 
 app.get('/', (req, res) => {
   res.send(
