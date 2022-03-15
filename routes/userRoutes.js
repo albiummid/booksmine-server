@@ -7,8 +7,8 @@ router.post('/add', userController.addUser)
 router.get('/getUserBy', userController.getUserBy)
 router.get('/getUserRoleBy', userController.getUserRoleBy)
 router.get('/all', userController.getAllUser)
-router.patch('/update', userController.updateUser)
-router.patch('/updateUserSettings', userController.updateUserSettings)
+router.put('/update', userController.updateUser)
+router.put('/updateUserSettings', userController.updateUserSettings)
 router.post('/checkAndCreateUser', userController.checkAndCreateUser)
 
 module.exports = router
